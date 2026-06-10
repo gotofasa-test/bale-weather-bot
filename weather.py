@@ -1,31 +1,32 @@
 import requests
+from datetime import datetime
+
 BOT_TOKEN = "18466837:19kfxOWImyMAnDhqx1WQxhrllysRUh9BEa8"
 CHAT_ID = "657206125"
 
-# مختصات مرکز تهران
 lat = 35.6892
 lon = 51.3890
 
-# دریافت داده هوا
+# دریافت اطلاعات هوا
 weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
-weather_data = requests.get(weather_url).json()
+weather = requests.get(weather_url).json()
 
-temperature = weather_data["current_weather"]["temperature"]
-weathercode = weather_data["current_weather"]["weathercode"]
+temp = weather["current_weather"]["temperature"]
+weathercode = weather["current_weather"]["weathercode"]
 
 # دریافت کیفیت هوا
 air_url = f"https://air-quality-api.open-meteo.com/v1/air-quality?latitude={lat}&longitude={lon}&current=us_aqi"
-air_data = requests.get(air_url).json()
+air = requests.get(air_url).json()
 
-aqi = air_data["current"]["us_aqi"]
+aqi = air["current"]["us_aqi"]
 
-# تبدیل AQI به سطح آلودگی
+# وضعیت کیفیت هوا
 if aqi <= 50:
     air_status = "🟢 پاک"
 elif aqi <= 100:
     air_status = "🟡 قابل قبول"
 elif aqi <= 150:
-    air_status = "🟠 ناسالم برای گروه‌های حساس"
+    air_status = "🟠 ناسالم برای حساس‌ها"
 elif aqi <= 200:
     air_status = "🔴 ناسالم"
 elif aqi <= 300:
@@ -33,28 +34,38 @@ elif aqi <= 300:
 else:
     air_status = "⚫ خطرناک"
 
-# بررسی باران یا طوفان
-warning = ""
-if weathercode in [61,63,65,80,81,82]:
-    warning = "\n⚠️ احتمال بارندگی در تهران"
+# ایموجی وضعیت هوا
+weather_emoji = "🌤"
+weather_text = "نیمه ابری"
+
+if weathercode == 0:
+    weather_emoji = "☀️"
+    weather_text = "آفتابی"
+
+elif weathercode in [1,2,3]:
+    weather_emoji = "⛅"
+    weather_text = "نیمه ابری"
+
+elif weathercode in [45,48]:
+    weather_emoji = "🌫"
+    weather_text = "مه آلود"
+
+elif weathercode in [61,63,65,80,81,82]:
+    weather_emoji = "🌧"
+    weather_بارانی"
+
 elif weathercode in [95,96,99]:
-    warning = "\n⚠️ هشدار طوفان یا رعد و برق"
+    weather_emoji = "⛈"
+    weather_text = "طوفانی"
 
-message = f"""
-🌤 گزارش وضعیت تهران
+# هشدار
+warning = ""
 
-🌡 دما: {temperature}°C
+if weathercode in [61,63,65,80,81,82]:
+    warning = "⚠️ هشدار: احتمال بارندگی"
 
-🏭 شاخص کیفیت هوا (AQI): {aqi}
-وضعیت: {air_status}
+if weathercode in [95,96,99]:
+    warning = "⚠️ هشدار: احتمال طوفان و رعد و برق"
 
-{warning}
-"""
-
-requests.post(
-    f"https://tapi.bale.ai/bot{BOT_TOKEN}/sendMessage",
-    json={
-        "chat_id": CHAT_ID,
-        "text": message
-    }
-)
+# زمان بروزرسانی
+time = datetime.now().
