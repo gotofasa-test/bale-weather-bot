@@ -19,4 +19,7 @@ jobs:
         run: pip install requests
 
       - name: Run bot
+        env:
+          BALE_TOKEN: ${{ secrets.BALE_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
         run: python weather.py
