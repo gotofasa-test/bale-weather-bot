@@ -1,6 +1,7 @@
 import requests
 import os
 from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 # دریافت توکن‌ها از محیط امن گیت‌هاب
 BOT_TOKEN = os.getenv("BALE_TOKEN")
@@ -55,7 +56,13 @@ def get_weather():
             advice += "\n😷 آلودگی بالاست، ترجیحاً ماسک بزن."
 
         # ساخت پیام نهایی با ساختار جدید
-        now_time = datetime.now().strftime("%H:%M")
+        offset = timezone(timedelta(hours=3, minutes=30))
+        tehran_time = datetime.now(offset).strftime("%H:%M")
+        message = (
+            f"..."
+            f"🕒 بروزرسانی: {tehran_time}"
+        )
+
         
         message = (
             f"📊 **گزارش تحلیلی هوای تهران**\n\n"
