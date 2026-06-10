@@ -1,0 +1,21 @@
+name: Bale Weather Bot
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Run bot
+        run: python weather.py
