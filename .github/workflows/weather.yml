@@ -7,18 +7,25 @@ on:
 
 jobs:
   run-bot:
+
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
 
-      - name: Install Python
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
         uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-      - name: Install requests
-        run: pip install requests
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
 
-      - name: Run bot
+      - name: Run weather bot
         env:
           BALE_TOKEN: ${{ secrets.BALE_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
