@@ -1,9 +1,10 @@
 import requests
+import os
 from datetime import datetime
 
 # تنظیمات اصلی
-BOT_TOKEN = "18466837:19kfxOWImyMAnDhqx1WQxhrllysRUh9BEa8"
-CHAT_ID = "657206125"
+BOT_TOKEN = os.getenv("BALE_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 
 # مختصات مرکز تهران
 lat = 35.6892
