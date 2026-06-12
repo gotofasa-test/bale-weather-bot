@@ -1,31 +1,28 @@
 name: Bale Weather Bot
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 */4 * * *"
+    - cron: "0 */4 * * *" # هر ۴ ساعت یکبار
+  workflow_dispatch: # قابلیت اجرای دستی برای تست
 
 jobs:
   run-bot:
-
     runs-on: ubuntu-latest
-
     steps:
-
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.11" # نسخه دقیق برای پایداری
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests
+          pip install requests pytz
 
-      - name: Run weather bot
+      - name: Run Weather Bot
         env:
           BALE_TOKEN: ${{ secrets.BALE_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
